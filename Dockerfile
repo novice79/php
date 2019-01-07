@@ -26,7 +26,7 @@ ENV DEPS \
 	libsqlite3-dev libjpeg-dev libpng-dev libxpm-dev libargon2-dev
 ENV SRC_DIR /php_src/php-7.3.0
 RUN apt-get update && apt-get install -y $TMP_TOOLS $DEPS
-COPY --from=novice/php $SRC_DIR $SRC_DIR
+COPY --from=novice/php:build $SRC_DIR $SRC_DIR
 # php begin
 WORKDIR $SRC_DIR
 RUN make install && cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.conf \
