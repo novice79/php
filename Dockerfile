@@ -43,6 +43,9 @@ ENV ver "7.3.0"
 RUN wget http://sg2.php.net/distributions/php-$ver.tar.xz && tar Jxvf php-$ver.tar.xz 
 WORKDIR /php_src/php-$ver
 RUN ./configure \
+    --enable-intl \
+    --enable-exif \
+    --enable-calendar \
     --enable-soap \
     --enable-mysqlnd \
     --enable-mbstring \
