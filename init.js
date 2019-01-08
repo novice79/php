@@ -47,9 +47,10 @@ function clearDir(path) {
 
 (function start_php() {
     const start_dt = new Date().getTime();
-    const php = exec( `php-fpm -F -O` );
-    php.stdout.on('data', data => console.log(`php-fpm say: ${data}`));
-    php.stderr.on('data', data => console.log(`php-fpm shout: ${data}`));
+    // use inherit stdio, php-fpm just directly out log to parent stdout/stderr
+    const php = spawn( `php-fpm`, ['-F'], {stdio:[0, 1, 2]} );    //exec can not tweak stdio?
+    // php.stdout.on('data', data => console.log(`php-fpm say: ${data}`));
+    // php.stderr.on('data', data => console.log(`php-fpm shout: ${data}`));
     php.on('close', (code) => {
         console.log(`php-fpm exited with code ${code}`);
         // const end_dt = new Date().getTime();
