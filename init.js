@@ -92,9 +92,9 @@ if ( !fs.existsSync(index_path) ) {
 }
 
 (function start_nginx() {
-    const nginx = exec( `nginx` );
-    nginx.stdout.on('data', data => console.log(`nginx say: ${data}`));
-    nginx.stderr.on('data', data => console.log(`nginx shout: ${data}`));
+    const nginx = spawn( `nginx`, [], {stdio: 'inherit'} );
+    // nginx.stdout.on('data', data => console.log(`nginx say: ${data}`));
+    // nginx.stderr.on('data', data => console.log(`nginx shout: ${data}`));
     nginx.on('close', (code) => {
         console.log(`nginx exited with code ${code}`);
         // restart nginx

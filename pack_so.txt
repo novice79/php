@@ -51,3 +51,5 @@ ldd `which nginx` | grep "=> /" | awk '{print $3}' | sort | uniq | xargs -I '{}'
 
 cp --parents `which nginx` .
 cp --parents /etc/nginx .
+
+echo "/lib/x86_64-linux-gnu/libc.so.6" | xargs -I '{}' sh -c 'cp `readlink -f {}` . ; cp -L {} .' 
