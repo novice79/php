@@ -149,3 +149,21 @@ git push origin :old-name new-name
 3. Reset the upstream branch for the new-name local branch.
 Switch to the branch and then:
 git push origin -u new-name
+
+###################
+## pgrep example ##
+###################
+pgrep -x mysqld >/dev/null && echo "Process found" || echo "Process not found"
+pgrep -x httpd >/dev/null && echo "Process found" || echo "Process not found"
+ 
+###################
+## pidof example ##
+###################
+pidof httpd >/dev/null && echo "Service is running" || echo "Service NOT running"
+pidof nginx >/dev/null && echo "Service is running" || echo "Service NOT running"
+ 
+################
+## ps example ##
+################
+ps -C httpd >/dev/null && echo "Running" || echo "Not running"
+ps -C nginx >/dev/null && echo "Running" || echo "Not running"
