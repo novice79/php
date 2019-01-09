@@ -39,7 +39,22 @@ COPY conf/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/nginx/nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /var/cache/nginx /var/www /run/php \
-	&& chown -R www-data:www-data /var/www
+	&& chown -R www-data:www-data /var/www \
+    && { \
+            echo '[global]'; \
+            echo 'error_log = /proc/self/fd/2'; \
+            echo; echo '; https://github.com/docker-library/php/pull/725#issuecomment-443540114'; echo 'log_limit = 8192'; \
+            echo; \
+            echo '[www]'; \
+            echo '; if we send this to /proc/self/fd/1, it never appears'; \
+            echo 'access.log = /proc/self/fd/2'; \
+            echo; \
+            echo 'clear_env = no'; \
+            echo; \
+            echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
+            echo 'catch_workers_output = yes'; \
+            echo 'decorate_workers_output = no'; \
+        } | tee /usr/local/etc/php-fpm.d/docker.conf
 	
 VOLUME ["/var/www"]
 
