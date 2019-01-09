@@ -1,4 +1,4 @@
-FROM php:fpm as my_php
+FROM novice/php:build as my_php
 WORKDIR /php_inst
 # copy .so symlink & target files together
 RUN find /usr/local/ -type f -perm /a+x -exec ldd {} \; \
