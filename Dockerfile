@@ -26,7 +26,7 @@ RUN ldd `which nginx` \
 FROM debian:stretch-slim
 LABEL maintainer="David <david@cninone.com>"
 
-RUN apt-get update && apt-get install -y tzdata 
+# RUN apt-get update && apt-get install -y tzdata 
 ENV TZ=Asia/Chongqing
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
