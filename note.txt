@@ -138,3 +138,7 @@ pecl install mongodb
 docker run -p 10080:80 -p 3306:3306 -p 33060:33060 -d -v $PWD/php_src:/var/www:rw -v $PWD/../mysql:/var/lib/mysql  --name lemp -t lemp
 
 docker rm $(docker ps -q -f status=exited)
+
+ git push --all
+
+ docker pull -a novice/php
