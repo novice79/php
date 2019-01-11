@@ -14,7 +14,7 @@ RUN find /usr/local/ -type f -perm /a+x -exec ldd {} \; \
 FROM nginx:latest
 LABEL maintainer="David <david@cninone.com>"
 
-RUN apt-get update && apt-get install -y tzdata 
+# RUN apt-get update && apt-get install -y tzdata 
 ENV TZ=Asia/Chongqing
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
