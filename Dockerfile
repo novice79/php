@@ -2,22 +2,50 @@ FROM debian:stretch-slim
 LABEL maintainer="David <david@cninone.com>"
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV LANG       en_US.UTF-8
-ENV LC_ALL	   "C.UTF-8"
-ENV LANGUAGE   en_US:en
+# ENV LANG       en_US.UTF-8
+# ENV LC_ALL	   "C.UTF-8"
+# ENV LANGUAGE   en_US:en
 
-RUN apt-get update && apt-get install -y tzdata curl wget git procps net-tools gnupg \
-	ca-certificates apt-transport-https 
+# RUN apt-get update && apt-get install -y tzdata curl wget git procps net-tools gnupg \
+# 	ca-certificates apt-transport-https 
 ENV TZ=Asia/Chongqing
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone 
 
-# nginx begin
-RUN printf '%s\n' "deb http://nginx.org/packages/mainline/debian/ stretch nginx" >> /etc/apt/sources.list
-RUN curl http://nginx.org/keys/nginx_signing.key | apt-key add -
-# nginx end
+# # nginx begin
+# RUN printf '%s\n' "deb http://nginx.org/packages/mainline/debian/ stretch nginx" >> /etc/apt/sources.list
+# RUN curl http://nginx.org/keys/nginx_signing.key | apt-key add -
+# # nginx end
 
 # COPY --from=php:fpm /usr/local /usr/local
 # php begin
+ENV UTILS \
+		pkg-config \
+		autoconf \
+		build-essential \
+		wget \
+		curl \
+		libtool
+
+ENV DEPS \
+		libssl-dev \
+		libcurl4-openssl-dev \
+		libxml2-dev \
+		libreadline7 \
+		libreadline-dev \
+		libzip-dev \
+		libzip4 \
+		openssl \
+		zlib1g-dev \
+		libpq-dev \
+		libedit-dev \
+		libsodium-dev \
+		libsqlite3-dev \
+		libjpeg-dev \
+		libpng-dev \
+		libxpm-dev \
+		libargon2-dev
+		
+ENV SRC_DIR /php_src
 RUN echo 'deb http://deb.debian.org/debian buster main \n \
 deb http://security.debian.org/debian-security buster/updates main \n \
 deb http://deb.debian.org/debian buster-updates main \n' \
@@ -31,17 +59,13 @@ deb http://deb.debian.org/debian buster-updates main \n' \
 		echo 'Pin: release n=buster'; \
 		echo 'Pin-Priority: 990'; \
 	} > /etc/apt/preferences.d/argon2-buster \
-	&& mkdir /php_src
-WORKDIR /php_src
-RUN apt-get update && apt-get install -y autoconf build-essential curl libtool \
-	libssl-dev libcurl4-openssl-dev libxml2-dev libreadline7 \
-	libreadline-dev libzip-dev libzip4 nginx openssl \
-	pkg-config zlib1g-dev libpq-dev libedit-dev libsodium-dev \
-	libsqlite3-dev libjpeg-dev libpng-dev libxpm-dev libargon2-dev \
+	&& mkdir "$SRC_DIR"
+WORKDIR "$SRC_DIR"
+RUN apt-get update && apt-get install -y $UTILS $DEPS \
 	&& apt autoremove -y ; rm -rf /var/lib/apt/lists/* 
 ENV ver "7.3.0"
 RUN wget http://sg2.php.net/distributions/php-$ver.tar.xz && tar Jxvf php-$ver.tar.xz 
-WORKDIR /php_src/php-$ver
+WORKDIR "$SRC_DIR/php-$ver"
 RUN ./configure \
     --enable-intl \
     --enable-exif \
@@ -87,19 +111,20 @@ RUN cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.conf \
 	&& pear config-set php_ini /usr/local/lib/php.ini \
 	&& pecl config-set php_ini /usr/local/lib/php.ini \
 	&& pecl install igbinary && yes | pecl install redis \
-	&& pecl install mongodb
+	&& pecl install mongodb \
+	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $UTILS
 # php end
 
 
-COPY conf/nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY conf/nginx/nginx.conf /etc/nginx/nginx.conf
+# COPY conf/nginx/default.conf /etc/nginx/conf.d/default.conf
+# COPY conf/nginx/nginx.conf /etc/nginx/nginx.conf
 
-RUN mkdir -p /var/www /run/php && chown -R www-data:www-data /var/www
+RUN mkdir -p /var/www /run/php && chown -R www-data:www-data /var/www ; rm -rf "$SRC_DIR"
 	
-VOLUME ["/var/www"]
+# VOLUME ["/var/www"]
 
-EXPOSE 80 
+# EXPOSE 80 
 
-COPY init /
+# COPY init /
 
-ENTRYPOINT ["/init"]
+# ENTRYPOINT ["/init"]
