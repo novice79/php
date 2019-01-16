@@ -2,9 +2,31 @@
 php-fpm -F &
 pid_php=$!
 
-nginx_v=`nginx -v 2>&1`
-php_v=`php -v 2>&1`
-cat <<EOT >> /var/www/index.php
+# write multiple lines to file
+# {
+#         echo '  directory "/var/cache/bind";'
+#         echo '  listen-on { 127.0.0.1; };'
+#         echo '  listen-on-v6 { none; };'
+#         echo '  version "";'
+#         echo '  auth-nxdomain no;'
+#         echo '  forward only;'  
+#         echo '  forwarders { 8.8.8.8; 8.8.4.4; };'
+#         echo '  dnssec-enable no;'
+#         echo '  dnssec-validation no;'
+# } >> your_file.txt
+
+# echo "
+#     111
+#     222
+#   333
+#   444
+# " > aaa.txt
+
+php_index="/var/www/index.php"
+if [ ! -f $php_index ]; then
+    nginx_v=`nginx -v 2>&1`
+    php_v=`php -v 2>&1`
+    cat <<EOT >> $php_index
 <!DOCTYPE html> 
 <html> 
 <head> 
@@ -26,7 +48,7 @@ cat <<EOT >> /var/www/index.php
 </body> 
 </html> 
 EOT
-
+fi
 nginx &
 pid_nginx=$!
 

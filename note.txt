@@ -149,3 +149,6 @@ git push origin :old-name new-name
 3. Reset the upstream branch for the new-name local branch.
 Switch to the branch and then:
 git push origin -u new-name
+
+docker images |grep -v REPOSITORY|awk '{print $1}'|xargs -L1 docker pull 
+docker images |awk '{print $1}'|xargs -L1
