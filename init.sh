@@ -2,9 +2,11 @@
 php-fpm -F &
 pid_php=$!
 
-nginx_v=`nginx -v 2>&1`
-php_v=`php -v 2>&1`
-cat <<EOT >> /var/www/index.php
+php_index="/var/www/index.php"
+if [ ! -f $php_index ]; then
+    nginx_v=`nginx -v 2>&1`
+    php_v=`php -v 2>&1`
+    cat <<EOT >> $php_index
 <!DOCTYPE html> 
 <html> 
 <head> 
@@ -26,6 +28,7 @@ cat <<EOT >> /var/www/index.php
 </body> 
 </html> 
 EOT
+fi
 
 nginx &
 pid_nginx=$!
