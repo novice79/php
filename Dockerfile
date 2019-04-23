@@ -39,7 +39,7 @@ COPY init.sh /
 
 RUN chown -R www-data:www-data /var/www && chmod +x /init.sh \
     && touch /var/log/php_errors.log && chmod 666 /var/log/php_errors.log \
-    rm -rf /var/www/* /etc/nginx/sites-{available,enabled}
+    ; rm -rf /var/www/* /etc/nginx/sites-{available,enabled}
 
 WORKDIR /var/www
 VOLUME ["/var/www"]
