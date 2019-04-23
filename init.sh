@@ -37,27 +37,6 @@ fi
 # if [ -f "/var/www/composer.json" ]; then
 #     cd /var/www && composer install
 # fi
-php-fpm -F &
-# pid_php=$!
-nginx &
-# pid_nginx=$!
+php-fpm7.2
 
-# no pgrep && ps
-while [ 1 ]
-do
-    sleep 2
-    SERVICE="nginx"
-    if ! pidof "$SERVICE" >/dev/null
-    then
-        echo "$SERVICE stopped. restart it"
-        "$SERVICE" &
-        # send mail ?
-    fi
-    SERVICE="php-fpm"
-    if ! pidof "$SERVICE" >/dev/null
-    then
-        echo "$SERVICE stopped. restart it"
-        "$SERVICE" -F &
-        # send mail ?
-    fi
-done
+nginx 

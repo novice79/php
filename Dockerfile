@@ -9,7 +9,7 @@ ENV LANG       en_US.UTF-8
 ENV LC_ALL	   "C.UTF-8"
 ENV LANGUAGE   en_US:en
 
-RUN apt-get update -y && apt-get install -y language-pack-en-base tzdata
+RUN apt-get update -y && apt-get install -y language-pack-en-base tzdata inetutils-ping curl
 
 RUN mkdir -p  /var/log/nginx /run/php 
 
@@ -38,8 +38,10 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY init.sh /
 
 RUN chown -R www-data:www-data /var/www && chmod +x /init.sh \
-    && touch /var/log/php_errors.log && chmod 666 /var/log/php_errors.log
+    && touch /var/log/php_errors.log && chmod 666 /var/log/php_errors.log \
+    rm -rf /var/www/* /etc/nginx/sites-{available,enabled}
 
+WORKDIR /var/www
 VOLUME ["/var/www"]
 
 
