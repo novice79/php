@@ -9,7 +9,7 @@ ENV LANG       en_US.UTF-8
 ENV LC_ALL	   "C.UTF-8"
 ENV LANGUAGE   en_US:en
 
-RUN apt-get update -y && apt-get install -y language-pack-en-base tzdata inetutils-ping curl
+RUN apt-get update -y && apt-get install -y language-pack-en-base tzdata inetutils-ping curl net-tools
 
 RUN mkdir -p  /var/log/nginx /run/php 
 
