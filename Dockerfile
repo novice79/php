@@ -36,7 +36,7 @@ COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 COPY init.sh /
-
+RUN usermod -u 777 www-data && groupmod -g 777 www-data
 RUN chown -R www-data:www-data /var/www && chmod +x /init.sh \
     && touch /var/log/php_errors.log && chmod 666 /var/log/php_errors.log \
     ; rm -rf /var/www/* /etc/nginx/sites-{available,enabled}
