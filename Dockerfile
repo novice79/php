@@ -20,8 +20,13 @@ RUN apt-get update && apt-get install -y nginx \
         php-cli php-common php php-mysql php-fpm php-curl php-gd \
         php-intl php-readline php-tidy php-json php-sqlite3 \
         php-bz2 php-mbstring php-xml php-zip php-opcache php-bcmath php-redis \
+        php-dev libmcrypt-dev php-pear vim \
     && apt-get clean && apt-get autoclean && apt-get remove  \
     && rm -rf /var/lib/apt/lists/* 
+    
+RUN pecl channel-update pecl.php.net && pecl install mcrypt-1.0.1 \
+    && echo "extension=mcrypt" >> /etc/php/7.2/cli/php.ini \
+    && echo "extension=mcrypt" >> /etc/php/7.2/fpm/php.ini
     
 RUN sed -i 's/^\(pm\.max_children\s*=\s*\).*$/\160/' /etc/php/7.2/fpm/pool.d/www.conf \
 && sed -i 's/^\(pm\.start_servers\s*=\s*\).*$/\120/' /etc/php/7.2/fpm/pool.d/www.conf \
